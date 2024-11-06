@@ -1,4 +1,14 @@
 body {
     background-color: grey;
-    color: aqua;
+}
+
+#book-container {
+    background-color: lightgrey;
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 300px));
+}
+
+.book-card {
+    background-color: white;
 }

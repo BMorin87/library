@@ -18,14 +18,33 @@ function Book(title, author, pageCount, haveRead) {
   }
 }
 
-var myLibrary = [];
-
 function addBookToLibrary(title, author, pageCount, haveRead, library) {
   const newBook = new Book(title, author, pageCount, haveRead);
   library.push(newBook);
 }
 
+var myLibrary = [];
+
 addBookToLibrary("The Hobbit", "J.R.R. Tolkien", 295, true, myLibrary);
 addBookToLibrary("Anathem", "Neal Stephenson", 642, true, myLibrary);
 addBookToLibrary("Ada, or Ardor", "Vladimir Nabokov", 311, false, myLibrary);
-myLibrary.forEach(book => console.log(book.title));
+
+const bookContainer = document.getElementById("book-container");
+
+myLibrary.forEach(book => {
+  const card = document.createElement("div");
+  card.classList.add("book-card");
+
+  const cardContent = `
+  <h2>${book.title}</h2>
+  <p>Author: ${book.author}</p>
+  <p>Page Count: ${book.pageCount}</p>
+  <label><input type="checkbox"> I've read this</label>
+  `;
+  card.innerHTML = cardContent;
+  if (book.haveRead) {
+    const checkBox = card.querySelector('input[type="checkbox"]')
+    checkBox.checked = true;
+  }
+  bookContainer.appendChild(card);
+})
