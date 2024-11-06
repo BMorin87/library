@@ -18,6 +18,14 @@ function Book(title, author, pageCount, haveRead) {
   }
 }
 
-const book = new Book("The Hobbit", "J.R.R. Tolkien", 295, true);
-const info = book.info();
-console.log(info);
+var myLibrary = [];
+
+function addBookToLibrary(title, author, pageCount, haveRead, library) {
+  const newBook = new Book(title, author, pageCount, haveRead);
+  library.push(newBook);
+}
+
+addBookToLibrary("The Hobbit", "J.R.R. Tolkien", 295, true, myLibrary);
+addBookToLibrary("Anathem", "Neal Stephenson", 642, true, myLibrary);
+addBookToLibrary("Ada, or Ardor", "Vladimir Nabokov", 311, false, myLibrary);
+myLibrary.forEach(book => console.log(book.title));
