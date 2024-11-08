@@ -18,11 +18,6 @@ function Book(title, author, pageCount, haveRead) {
   }
 }
 
-function addBookToLibrary(title, author, pageCount, haveRead, library) {
-  const newBook = new Book(title, author, pageCount, haveRead);
-  library.push(newBook);
-}
-
 var myLibrary = [];
 
 addBookToLibrary("The Hobbit", "J.R.R. Tolkien", 295, true, myLibrary);
@@ -31,31 +26,50 @@ addBookToLibrary("Ada, or Ardor", "Vladimir Nabokov", 311, false, myLibrary);
 
 updateLibraryDisplay(myLibrary);
 
+const addBookButton = document.getElementById("add-book");
+addBookButton.addEventListener('click', showDialogue);
+
+function addBookToLibrary(title, author, pageCount, haveRead, library) {
+  const newBook = new Book(title, author, pageCount, haveRead);
+  library.push(newBook);
+}
+
 function updateLibraryDisplay(library) {
   const bookContainer = document.getElementById("book-container");
 
-  myLibrary.forEach(book => {
+  library.forEach((book, index) => {
     const card = document.createElement("div");
     card.classList.add("book-card");
+    card.dataset.index = index;
   
     card.innerHTML = `
-    <h2>${book.title}</h2>
-    <p>Author: ${book.author}</p>
-    <p>Page Count: ${book.pageCount}</p>
-    <label><input type="checkbox"> I've read this</label>
+    <h2 class="title">${book.title}</h2>
+    <p class="author">Author: ${book.author}</p>
+    <p class="pageCount">Page Count: ${book.pageCount}</p>
+    <label><input type="checkbox" class="haveRead"> I've read this</label><br>
+    <button type="button" id="remove">Remove book</button>
     `;
     if (book.haveRead) {
       const checkBox = card.querySelector('input[type="checkbox"]')
       checkBox.checked = true;
     }
+
+    const removeButton = card.querySelector("#remove");
+    removeButton.addEventListener('click', removeBook);
+
     bookContainer.appendChild(card);
   })
 }
 
+function removeBook() {
+  // Remove the book from the DOM.
+  const card = this.parentNode;
+  card.remove();
 
-
-const addBook = document.getElementById("add-book");
-addBook.addEventListener('click', showDialogue)
+  // And from the internal library array.
+  const index = card.dataset.index;
+  myLibrary.splice(index, 1);
+}
 
 function showDialogue() {
   const dialogue = document.createElement('dialog');
