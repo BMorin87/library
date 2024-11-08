@@ -49,16 +49,21 @@ function updateLibraryDisplay(library) {
     <label><input type="checkbox" class="haveRead"> I've read this</label><br>
     <button type="button" id="remove">Remove book</button>
     `;
-    if (book.haveRead) {
-      const checkBox = card.querySelector('input[type="checkbox"]')
-      checkBox.checked = true;
-    }
+    const checkBox = card.querySelector('input[type="checkbox"]')
+    if (book.haveRead) { checkBox.checked = true; }
+    checkBox.addEventListener('change', toggleHaveRead)
 
     const removeButton = card.querySelector("#remove");
     removeButton.addEventListener('click', removeBook);
 
     bookContainer.appendChild(card);
   })
+}
+
+function toggleHaveRead() {
+  const card = this.parentNode.parentNode;
+  const index = card.dataset.index;
+  myLibrary[index].haveRead = this.checked;
 }
 
 function removeBook() {
