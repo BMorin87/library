@@ -38,10 +38,10 @@ function updateLibraryDisplay(library) {
   const bookContainer = document.getElementById("book-container");
 
   library.forEach((book, index) => {
+    // Create a card to display for each book in the library.
     const card = document.createElement("div");
     card.classList.add("book-card");
     card.dataset.index = index;
-  
     card.innerHTML = `
     <h2 class="title">${book.title}</h2>
     <p class="author">Author: ${book.author}</p>
@@ -49,6 +49,8 @@ function updateLibraryDisplay(library) {
     <label><input type="checkbox" class="haveRead"> I've read this</label><br>
     <button type="button" id="remove">Remove book</button>
     `;
+
+    // Toggle the haveRead boolean if the user clicks the checkbox.
     const checkBox = card.querySelector('input[type="checkbox"]')
     if (book.haveRead) { checkBox.checked = true; }
     checkBox.addEventListener('change', toggleHaveRead)
@@ -61,9 +63,10 @@ function updateLibraryDisplay(library) {
 }
 
 function toggleHaveRead() {
+  // The checkbox is a grandchild of the display card.
   const card = this.parentNode.parentNode;
   const index = card.dataset.index;
-  myLibrary[index].haveRead = this.checked;
+  myLibrary[index].haveRead = this.checked ? true : false;
 }
 
 function removeBook() {
@@ -98,6 +101,7 @@ function showDialogue() {
   submitButton.addEventListener('click', () => {
     submit();
     dialogue.close();
+    dialogue.remove();
   });
   dialogueContent.appendChild(form);
 
@@ -106,6 +110,7 @@ function showDialogue() {
   closeButton.textContent = 'Close';
   closeButton.addEventListener('click', () => {
     dialogue.close();
+    dialogue.remove();
   });
   dialogueContent.appendChild(closeButton);
 
