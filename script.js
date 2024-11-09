@@ -1,3 +1,21 @@
+var myLibrary = [];
+initializeLibrary();
+updateLibraryDisplay(myLibrary);
+
+const addBookButton = document.getElementById("add-book");
+addBookButton.addEventListener('click', showDialog);
+
+function initializeLibrary() {
+  addBookToLibrary("The Hobbit", "J.R.R. Tolkien", 295, true, myLibrary);
+  addBookToLibrary("Anathem", "Neal Stephenson", 642, true, myLibrary);
+  addBookToLibrary("Ada, or Ardor", "Vladimir Nabokov", 311, false, myLibrary);
+}
+
+function addBookToLibrary(title, author, pageCount, haveRead, library) {
+  const newBook = new Book(title, author, pageCount, haveRead);
+  library.push(newBook);
+}
+
 function Book(title, author, pageCount, haveRead) {
   this.title = title;
   this.author = author;
@@ -16,22 +34,6 @@ function Book(title, author, pageCount, haveRead) {
 
     return bookInfo;
   }
-}
-
-var myLibrary = [];
-
-addBookToLibrary("The Hobbit", "J.R.R. Tolkien", 295, true, myLibrary);
-addBookToLibrary("Anathem", "Neal Stephenson", 642, true, myLibrary);
-addBookToLibrary("Ada, or Ardor", "Vladimir Nabokov", 311, false, myLibrary);
-
-updateLibraryDisplay(myLibrary);
-
-const addBookButton = document.getElementById("add-book");
-addBookButton.addEventListener('click', showDialogue);
-
-function addBookToLibrary(title, author, pageCount, haveRead, library) {
-  const newBook = new Book(title, author, pageCount, haveRead);
-  library.push(newBook);
 }
 
 function updateLibraryDisplay(library) {
@@ -79,14 +81,16 @@ function removeBook() {
   myLibrary.splice(index, 1);
 }
 
-function showDialogue() {
-  const dialogue = document.createElement('dialog');
-  dialogue.classList.add('modal-dialogue');
-
-  const dialogueContent = document.createElement('div');
-  dialogueContent.classList.add('modal-content');
-
+function showDialog() {
+  // Create the modal dialog for the user to add books.
+  const dialog = document.createElement('dialog');
+  document.body.appendChild(dialog);
+  dialog.classList.add('modal-dialogue');
+  const dialogContent = document.createElement('div');
+  dialog.appendChild(dialogContent);
+  dialogContent.classList.add('modal-content');
   const form = document.createElement('form');
+  dialogContent.appendChild(form);
   form.innerHTML = `
   <label for="title">Title:</label>
   <input type="text" id="title" name="title"><br>
@@ -97,39 +101,40 @@ function showDialogue() {
   <label for="haveRead"><input type="checkbox" id="haveRead" name="haveRead">I've read this</label><br>
   <button type="button" id="submit">Submit book</button>
   `;
+  // Button for the user to submit a book to the library.
   const submitButton = form.querySelector("#submit");
   submitButton.addEventListener('click', () => {
     submit();
-    dialogue.close();
-    dialogue.remove();
+    dialog.close();
+    dialog.remove();
   });
-  dialogueContent.appendChild(form);
 
+  // Button to back out of the modal dialog.
   const closeButton = document.createElement('button');
+  dialogContent.appendChild(closeButton);
   closeButton.classList.add('close');
   closeButton.textContent = 'Close';
   closeButton.addEventListener('click', () => {
-    dialogue.close();
-    dialogue.remove();
+    dialog.close();
+    dialog.remove();
   });
-  dialogueContent.appendChild(closeButton);
 
-  dialogue.appendChild(dialogueContent);
-  document.body.appendChild(dialogue);
-  dialogue.showModal();
+  dialog.showModal();
 }
 
 function submit() {
+  // Get the user's input book information.
   const form = document.querySelector("form");
-
   const title = form.querySelector('#title').value;
   const author = form.querySelector('#author').value;
   const pageCount = form.querySelector('#pageCount').value;
   const haveReadInput = form.querySelector('#haveRead');
   let haveRead = haveReadInput.checked ? true : false;
 
+  // Add the book to the internal library.
   addBookToLibrary(title, author, pageCount, haveRead, myLibrary)
 
+  // Display the library with the new book added.
   clearLibraryDisplay();
   updateLibraryDisplay(myLibrary);
 }
