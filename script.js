@@ -1,3 +1,25 @@
+class Book {
+  constructor(title, author, pageCount, haveRead) {
+    this.title = title;
+    this.author = author;
+    this.pageCount = pageCount;
+    this.haveRead = haveRead;
+  }
+
+  info = function() {
+    var bookInfo = `"${this.title}" by ${this.author}, ${this.pageCount} pages, `;
+
+    if (this.haveRead) {
+      bookInfo += "read";
+    }
+    else {
+      bookInfo += "not read yet";
+    }
+
+    return bookInfo;
+  }
+}
+
 var myLibrary = [];
 initializeLibrary();
 updateLibraryDisplay(myLibrary);
@@ -16,25 +38,6 @@ function addBookToLibrary(title, author, pageCount, haveRead, library) {
   library.push(newBook);
 }
 
-function Book(title, author, pageCount, haveRead) {
-  this.title = title;
-  this.author = author;
-  this.pageCount = pageCount;
-  this.haveRead = haveRead;
-
-  this.info = function() {
-    var bookInfo = `"${this.title}" by ${this.author}, ${this.pageCount} pages, `
-
-    if (this.haveRead) {
-      bookInfo += "read"
-    }
-    else {
-      bookInfo += "not read yet"
-    }
-
-    return bookInfo;
-  }
-}
 
 function updateLibraryDisplay(library) {
   const bookContainer = document.getElementById("book-container");
