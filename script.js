@@ -128,9 +128,11 @@ class ScreenController {
     <input type="text" id="title" name="title" required minlength='2'>
     <span id="titleError" class='error' aria-live="polite"></span><br>
     <label for="author">Author:</label>
-    <input type="text" id="author" name="author"><br>
+    <input type="text" id="author" name="author" required minlength='2'>
+    <span id="authorError" class="error" aria-live="polite"></span><br>
     <label for="pageCount">Page count:</label>
-    <input type="text" id="pageCount" name="pageCount"><br>
+    <input type="text" id="pageCount" name="pageCount" required>
+    <span id="pageError" class="error" aria-live="polite"></span><br>
     <label for="haveRead"><input type="checkbox" id="haveRead" name="haveRead">I've read this</label><br>
     <button type="button" id="submit">Submit book</button>
     `;
@@ -157,8 +159,12 @@ class ScreenController {
     const form = dialog.querySelector("form");
     const title = form.querySelector("#title");
     const titleError = form.querySelector("#titleError");
+    const author = form.querySelector("#author");
+    const authorError = form.querySelector("#authorError");
+    const pageCount = form.querySelector("#pageCount");
+    const pageError = form.querySelector("#pageError");
 
-    function showError() {
+    function showTitleError() {
       if (title.validity.valueMissing) {
         titleError.textContent = "Please enter the book's title.";
       } else if (title.validity.tooShort) {
@@ -167,10 +173,66 @@ class ScreenController {
       titleError.className = "error active";
     }
 
-    title.addEventListener("input", (event) => {
+    function showAuthorError() {
+      if (author.validity.valueMissing) {
+        authorError.textContent = "Please enter the book's author.";
+      } else if (author.validity.tooShort) {
+        authorError.textContent = `Author should be at least ${author.minLength} character.`
+      }
+      authorError.className = "error active";
+    }
+
+    function showPageError() {
+      const input = parseInt(pageCount.value);
+      const inputIsNumber = !isNaN(input);
+
+      if (pageCount.validity.valueMissing) {
+        pageError.textContent = "Please enter a page count.";
+      } else if (!inputIsNumber) {
+        pageError.textContent = "Please enter a number.";
+      } else if (input < 0) {
+        pageError.textContent = "Please enter a value greater than zero."
+      }
+    }
+
+    form.addEventListener("submit", (event) => {
       if (!title.validity.valid) {
-        showError();
+        showTitleError();
         event.preventDefault();
+      } else if (!author.validity.valid) {
+        showAuthorError();
+        event.preventDefault();
+      } else if (!pageCount.validity.valid) {
+        showPageError();
+        event.preventDefault();
+      }
+    });
+
+    title.addEventListener("input", (event) => {
+      if (title.validity.valid) {
+        titleError.textContent = "";
+        titleError.classList.remove("active");
+      } else {
+        showTitleError();
+      }
+    })
+
+
+    author.addEventListener("input", (event) => {
+      if (author.validity.valid) {
+        authorError.textContent = "";
+        authorError.classList.remove("active");
+      } else {
+        showAuthorError();
+      }
+    });
+
+    pageCount.addEventListener("input", (event) => {
+      if (pageCount.validity.valid) {
+        pageError.textContent = "";
+        pageError.classList.remove("active");
+      } else {
+        showAuthorError();
       }
     });
   }
