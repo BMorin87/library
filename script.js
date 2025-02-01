@@ -138,8 +138,8 @@ class ScreenController {
     `;
 
     // Button for the user to submit a book to the library.
-    const submitButton = form.querySelector("#submit");
-    submitButton.addEventListener("click", () => this.Submit(dialog));
+    // const submitButton = form.querySelector("#submit");
+    // submitButton.addEventListener("click", () => this.Submit(dialog));
 
     // Button to back out of the modal dialog.
     const closeButton = document.createElement("button");
@@ -195,16 +195,16 @@ class ScreenController {
       }
     }
 
-    form.addEventListener("submit", (event) => {
+    const submitButton = form.querySelector("#submit");
+    submitButton.addEventListener("click", (event) => {
       if (!title.validity.valid) {
         showTitleError();
-        event.preventDefault();
       } else if (!author.validity.valid) {
         showAuthorError();
-        event.preventDefault();
       } else if (!pageCount.validity.valid) {
         showPageError();
-        event.preventDefault();
+      } else {
+        this.Submit(form);
       }
     });
 
@@ -216,7 +216,6 @@ class ScreenController {
         showTitleError();
       }
     })
-
 
     author.addEventListener("input", (event) => {
       if (author.validity.valid) {
@@ -237,9 +236,8 @@ class ScreenController {
     });
   }
 
-  Submit(dialog) {
+  Submit(form) {
     // Get the user's input book information.
-    const form = dialog.querySelector("form");
     const title = form.querySelector("#title").value;
     const author = form.querySelector("#author").value;
     const pageCount = form.querySelector("#pageCount").value;
@@ -253,6 +251,7 @@ class ScreenController {
     this.ClearLibraryDisplay();
     this.UpdateLibraryDisplay(this.activeLibrary);
 
+    const dialog = form.parentNode.parentNode;
     dialog.close();
     dialog.remove();
   }
