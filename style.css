@@ -39,7 +39,16 @@ input:invalid {
   background-color: #fdd;
 }
 
+input.invalid {
+  border-color: #900;
+  background-color: #fdd;
+}
+
 input:focus:invalid {
+  outline: none;
+}
+
+input.invalid:focus {
   outline: none;
 }
 

@@ -106,7 +106,7 @@ class ScreenController {
   ShowDialog() {
     const dialogDiv = this.CreateModalDialog();
     this.CreateDialogContent(dialogDiv);
-    this.AddTitleValidation(dialogDiv);
+    this.AddFormValidation(dialogDiv);
     dialogDiv.showModal();
   }
 
@@ -155,7 +155,7 @@ class ScreenController {
     dialog.appendChild(dialogContent);
   }
 
-  AddTitleValidation(dialog) {
+  AddFormValidation(dialog) {
     const form = dialog.querySelector("form");
     const title = form.querySelector("#title");
     const titleError = form.querySelector("#titleError");
@@ -183,25 +183,34 @@ class ScreenController {
     }
 
     function showPageError() {
-      const input = parseInt(pageCount.value);
-      const inputIsNumber = !isNaN(input);
+      const input = pageCount.value;
+      const inputIsNumber = /^\d+$/.test(input);
 
       if (pageCount.validity.valueMissing) {
         pageError.textContent = "Please enter a page count.";
-      } else if (!inputIsNumber) {
-        pageError.textContent = "Please enter a number.";
-      } else if (input < 0) {
+      } else if (parseInt(input) < 0) {
         pageError.textContent = "Please enter a value greater than zero."
+      } else if (!inputIsNumber) {
+        pageError.textContent = "Please enter a whole number.";
+      } else {
+        pageError.textContent = "";
+        pageError.classList.remove("active");
+        pageError.classList.remove("invalid");
+        return;
       }
+      pageError.classList.add("active");
+      pageError.classList.add("invalid");
+      pageCount.classList.add("invalid");
     }
 
     const submitButton = form.querySelector("#submit");
     submitButton.addEventListener("click", (event) => {
+      event.preventDefault();
       if (!title.validity.valid) {
         showTitleError();
       } else if (!author.validity.valid) {
         showAuthorError();
-      } else if (!pageCount.validity.valid) {
+      } else if (pageCount.classList.contains("invalid")) {
         showPageError();
       } else {
         this.Submit(form);
@@ -227,12 +236,7 @@ class ScreenController {
     });
 
     pageCount.addEventListener("input", (event) => {
-      if (pageCount.validity.valid) {
-        pageError.textContent = "";
-        pageError.classList.remove("active");
-      } else {
-        showAuthorError();
-      }
+      showPageError();
     });
   }
 
